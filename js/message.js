@@ -7,9 +7,9 @@ function showMessageBox(message, options) {
     ];
     var box = document.createElement("div");
     box.style.position = "fixed";
-    box.style.top = "30px";
     box.style.width = 80 + 10 * message.length + "px";
     box.style.height = "24px";
+    box.style.top = "5px";
     box.innerHTML = "<b>" + message + "</b>";
     box.style["background-color"] = "white";
     box.style.border = "2px dotted " + color[options];
@@ -32,8 +32,15 @@ function showMessageBox(message, options) {
     //发布事件通知
     setTimeout(function() {
         document.body.appendChild(box);
+        var sti = setInterval(function() {
+            box.style["top"] = parseInt(box.style["top"]) + 1 + "px";
+            //新的消息从顶向下每1/25s(40ms)移动1px 移到正常显示位置top:30px
+        }, 40);
+        setTimeout(function() {
+            clearInterval(sti);
+        }, 1000);
     }, 1080);
-    //1.08s后显示通知
+    //1.08s后显示消息
     func_id = msb_addMessageListener(function() {
         var sti = setInterval(function() {
             box.style["top"] = parseInt(box.style["top"]) + 1 + "px";
