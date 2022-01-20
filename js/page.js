@@ -13,6 +13,11 @@ function loadBasicHTML() {
             username
         ]
     ]);
+
+    if (username === "null" || username === null) {
+        document.querySelector("#basic_html_login_operation").innerHTML = "<a href=/login?return_uri=" + location.href + ">注册/登录</a>";
+        document.querySelector("#username").innerHTML = "尚未登录";
+    }
 };
 
 function loadPage() {
@@ -25,6 +30,9 @@ function parseURLHash() {
     var hash = location.href.substring(location.origin.length);
     if (hash.substring(0, 9) == "/404.html")
         hash = location.hash;
+    else if (hash == "" || hash == "/" || hash == "/#") {
+        hash = "@";
+    }
     return {
         page: hash.split("@")[0] || "index",
         arg: hash.split("@")[1] || ""
@@ -42,7 +50,7 @@ function fillTemplate(string, options) {
 
 basicHTML = {
     basic: `
-    <center><h1>GitNovel</h1></center><hr>用户名<span id=username>{{$username}}</span> <a href=# onclick=javascript:logout();>退出登录</a><br>
+    <center><h1>GitNovel</h1></center><hr>用户名<span id=username>{{$username}}</span> <span id=basic_html_login_operation><a href=# onclick=javascript:logout();>退出登录</a></span><br>
     `,
     index: `
     <hr>图书馆<a href=/library>戳我</a><br>
