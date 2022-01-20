@@ -1,0 +1,18 @@
+<meta charset="UTF-8" />
+<title>GitNovel</title>
+<script src=js/ajax.js></script>
+<script src=js/protect.js></script>
+<script src=js/editNovel.js></script>
+<script src=js/viewNovel.js></script>
+<script src=js/user.js></script>
+<script src=js/page.js></script>
+<script>
+    onload = function() {
+        checkWhiteList().then(function(res) {
+            console.log(res);
+            loadBasicPage();
+        }).catch(function(err) {
+            console.error(err);
+        });
+    };
+</script>
