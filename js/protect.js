@@ -12,7 +12,7 @@ function checkWhiteList() {
     })();
 
     return new Promise(function(resolve, reject) {
-        ajax("/file/private/whitelist").then(function(data) {
+        ajax("/file/private/whitelist?random=" + Math.random()).then(function(data) {
             data = JSON.parse(data[1]);
             var matched_flag = false;
             for (var i = 0; i < data["whitelist@gitnovel-config-file"]["ipv4"].length; i++) {
