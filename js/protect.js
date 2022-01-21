@@ -25,6 +25,7 @@ function checkWhiteList() {
                 document.body.innerHTML = "ip地址" + sessionStorage.ip + "不在访问白名单内";
                 return reject();
             } else document.body.innerHTML = "<center><h1>GitNovel</h1><br>正在加载文件<br>请稍后<br></center><p id=loadBasicHTML style='position:fixed;bottom:0px;right:0px'><a href=# onclick=javascript:loadBasicHTML();>加载基本HTML</a></p>";
+            return resolve();
         }).catch(function(err) {
             document.body.innerHTML = "Error: Cannot load whitelist";
             return reject();
