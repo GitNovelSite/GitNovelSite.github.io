@@ -1,0 +1,36 @@
+function PAGE_JS_MAIN() {
+    var username = getusername();
+    if (username === null || username === "null") {
+        document.querySelector("#latest_reading").innerHTML = "请先登录";
+        document.querySelector("#latest_writing").innerHTML = "请先登录";
+        return _remove_main();
+    };
+    localforage.getItem("latest-reading").then(function(data) {
+        if (data === null) {
+            document.querySelector("#latest_reading").innerHTML = "没有数据哦~";
+            return;
+        }
+        data = JSON.parse(data);
+        document.querySelector("#latest_reading").innerHTML = "仅显示前12本书籍 | ";
+        var s = "<table><tr><td></td><td></td><td></td><td></td></tr>";
+        for (var i = 0; i < (data.length / 4) && i < 3; i++) {
+            s += "<tr>";
+            for (var j = 0;
+                (i * 4 + j) < data.length && j < 4; j++) {
+                s += "<td><a href=/view@" + data[i * 4 + j].uuid + "," + data[i * 4 + j] + " target=_blank><img src=//cdn.jsdelivr.net/gh/GitNovel/GitNovel.github.io/data/public/noveldata/images/" + data[i * 4 + j].uuid + ".jpg width=20% alt=" + data[i * 4 + j].bookname + "></a></td>";
+            };
+            for (var j = 0;
+                (i * 4 + j) < data.length && j < 4; j++) {
+                s += "<td>" + data[i * 4 + j].bookname + "</td>";
+            };
+        }
+    }).catch(function(err) {
+        console.error(err);
+        document.querySelector("#latest_reading").innerHTML = "An error was encountered:" + err || err.message;
+    });
+};
+
+function _remove_main() {
+    delete PAGE_JS_MAIN;
+    delete window.PAGE_JS_MAIN;
+};
