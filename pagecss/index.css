@@ -1,0 +1,21 @@
+.enter-button {
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 8px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s;
+    /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+}
+
+.enter-button:hover {
+    background-color: #4CAF50;
+    color: white;
+}
