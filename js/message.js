@@ -30,7 +30,21 @@ function showMessageBox(message, options) {
         _msb_messagelistener[i]();
     };
     //发布事件通知
-    setTimeout(function() {
+
+    if (_msb_messagelistener.length) {
+        setTimeout(function() {
+            document.body.appendChild(box);
+            var sti = setInterval(function() {
+                box.style["top"] = parseInt(box.style["top"]) + 1 + "px";
+                //新的消息从顶向下每1/25s(40ms)移动1px 移到正常显示位置top:30px
+            }, 40);
+            setTimeout(function() {
+                clearInterval(sti);
+            }, 1000);
+        }, 1080);
+        //1.08s后显示消息
+    } else {
+        //如果length(listener) = 0 没有绑定事件 即第1条消息 不设发送延时
         document.body.appendChild(box);
         var sti = setInterval(function() {
             box.style["top"] = parseInt(box.style["top"]) + 1 + "px";
@@ -39,8 +53,7 @@ function showMessageBox(message, options) {
         setTimeout(function() {
             clearInterval(sti);
         }, 1000);
-    }, 1080);
-    //1.08s后显示消息
+    }
     func_id = msb_addMessageListener(function() {
         var sti = setInterval(function() {
             box.style["top"] = parseInt(box.style["top"]) + 1 + "px";
@@ -66,3 +79,12 @@ const MES_SUCCESS = 1;
 const MES_WARN = 2;
 const MES_ERROR = 3;
 const MES_INFO = 4;
+
+function tellUser(msg, status) {
+    if (typeof(status) == "undefined" || !status) {
+        status = MES_INFO;
+    }
+    if (window.isLoadingBasicHTML || 0) {
+        alert([, "SUCCESS:", "WARN:", "ERROR:", "INFO:"][status] + msg);
+    } else showMessageBox(msg, status);
+}
