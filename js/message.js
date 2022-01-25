@@ -19,6 +19,14 @@ function showMessageBox(message, options) {
     box.style["opacity"] = 0.8;
     box.style["left"] = "40%";
 
+    if (isMobile()) {
+        //手机端
+        box.style["left"] = "10%";
+        box.style["font-size"] = "2.5em";
+        box.style.width = 80 + 40 * message.length + "px";
+        box.style.height = "50px";
+    }
+
     setTimeout(function() {
         document.body.removeChild(box);
         //10s后移除通知

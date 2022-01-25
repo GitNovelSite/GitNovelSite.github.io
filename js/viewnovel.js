@@ -12,6 +12,10 @@ function getNovelBasicInfo(uuid, cache) {
                 //反正ghStream.js的API也很友好 就是sync费时容易卡页面
 
                 var fp = fopen("GitNovelSite/GitNovelSite.github.io/file/public/noveldata/zip/" + uuid + ".zip", "r");
+                if (fp == NULL) {
+                    //未抓取到数据
+                    return resolve({ status: "error", msg: "Novel is not available" });
+                }
                 var zipdata = getdata(fp);
                 fclose(fp);
 
