@@ -50,7 +50,9 @@ function PAGE_JS_MAIN() {
                     s += "</tr><tr>";
                     for (var j = 0;
                         (i * 4 + j) < list.length && j < 4; j++) {
-                        s += "<td>" + list[i * 4 + j].bookname + "</td>";
+                        if (!isMobile())
+                            s += "<td>" + list[i * 4 + j].bookname + "</td>"; /* 电脑端 */
+                        else s += `<td><span style='font-size:3em'>${list[i*4+j].bookname}</span></td>`; /* 移动端*/
                     };
                     s += "</tr>"
                 };

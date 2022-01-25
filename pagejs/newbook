@@ -73,6 +73,5 @@ function PAGE_JS_MAIN() {
         location.href = '/view@' + uuid + ",0";
 
 
-
     });
 };
