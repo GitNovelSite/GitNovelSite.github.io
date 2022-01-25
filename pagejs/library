@@ -1,0 +1,74 @@
+function PAGE_JS_MAIN() {
+    localforage.getItem("library-cache").then(function(res) {
+        if (res == null) {
+            //没有缓存数据
+            ajax("/file/public/booklist").then(function(res) {
+                var list = JSON.parse(res[1]);
+                var data = { list: list };
+                var tick = parseInt(new Date().getTime() / (1000 * 60 * 60 * 24 * 3));
+                //1000ms * 60s * 60min * 24hours * 3day 
+                //3天刷新一次缓存
+                var tick_md5_obj = new SparkMD5();
+                tick_md5_obj.append(tick.toString());
+                var tick_md5 = tick_md5_obj.end();
+                data.tick = tick_md5;
+                localforage.setItem("library-cache", data).then(function() {
+                    //缓存成功
+                    return PAGE_JS_MAIN();
+                }).catch(function(err) {
+                    console.error(err);
+                    tellUser("缓存服务器数据失败，正在重试", MES_ERROR);
+                    return PAGE_JS_MAIN();
+                });
+            }).catch(function(err) {
+                console.error(err);
+                if (err[0] == 404 || err[0] >= 500) {
+                    tellUser("服务器错误，请联系lihugang@outlook.com", MES_ERROR);
+                } else {
+                    tellUser("未知错误，请联系lihugang@outlook.com并附上Console截图", MES_ERROR);
+                };
+            });
+        } else {
+            var tick = parseInt(new Date().getTime() / (1000 * 60 * 60 * 24 * 3));
+            //1000ms * 60s * 60min * 24hours * 3day 
+            //3天刷新一次缓存
+            var tick_md5_obj = new SparkMD5();
+            tick_md5_obj.append(tick.toString());
+            var tick_md5 = tick_md5_obj.end();
+
+            if (res.tick == tick_md5) {
+                //tick未过期
+                var list = res.list;
+
+                var s = "<table><tr><td></td><td></td><td></td><td></td></tr>";
+                for (var i = 0; i < (list.length / 4) && i < 3; i++) {
+                    s += "<tr>";
+                    for (var j = 0;
+                        (i * 4 + j) < list.length && j < 4; j++) {
+                        s += "<td><a href=/view@" + list[i * 4 + j].uuid + ",0 target=_blank><img src=//cdn.jsdelivr.net/gh/GitNovelSite/GitNovelSite.github.io/file/public/noveldata/images/" + list[i * 4 + j].uuid + ".jpg width=20% alt=" + list[i * 4 + j].bookname + "></a></td>";
+                    };
+                    s += "</tr><tr>";
+                    for (var j = 0;
+                        (i * 4 + j) < list.length && j < 4; j++) {
+                        s += "<td>" + list[i * 4 + j].bookname + "</td>";
+                    };
+                    s += "</tr>"
+                };
+                document.querySelector("#books").innerHTML = s;
+
+            } else {
+                //tick已过期
+                //删除缓存重新请求
+                localforage.removeItem("library-cache").then(function(res) {
+                    return PAGE_JS_MAIN();
+                }).catch(function(err) {
+                    console.error(err);
+                    tellUser("无法清除缓存", MES_ERROR);
+                });
+            };
+        };
+    }).catch(function(err) {
+        console.error(err);
+        tellUser("读取数据失败", MES_ERROR);
+    });
+};
