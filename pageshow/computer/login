@@ -1,0 +1,13 @@
+<img src=https://s3.bmp.ovh/imgs/2022/01/0a890246c086f1ea.png alt=GitNovel height=30px>
+<hr>
+<div id=username-box style='position:fixed;top:0px;right:0px;border:2px solid #ffdead'>用户名<span id=username> {{$username}}
+</span><br><span id=_login_operation><a href=# onclick=javascript:logout();
+>退出登录</a></span></span>
+</div>
+<center>
+    <div id="reg-login-box" style="border-style:solid;border-width:3px;border-color:#e6e6fa;border-radius:8px;width:480px;height:600px"><span style="font-family:Cursive,Helvetica,sans-serif;white-space:pre-wrap;font-size:2.5em;color:#ffa500" ;="">用户登录</span><br><span style="font-size:0.8em;color:#87cefa"><a onclick=javascript:location.href='/register'>注册</a></span><br><span style="font-size:0.8em;color:#87cefa"><a onclick=javascript:backPage();>返回上一页</a></span><br><br>
+        <span style="font-family:Cursive,Helvetica,sans-serif;white-space:pre-wrap;font-size:1.2em;color:#ffa500" ;="">用户名<input id="username-input-area" maxlength="24" placeholder="Username" style="width:128px;background:#ffdead;border-style:solid;border-width:2px;border-radius:6px;border-color:#ffffff" ;=""></span><br>
+        <span style="font-family:Cursive,Helvetica,sans-serif;white-space:pre-wrap;font-size:1.2em;color:#ffa500" ;="">密码<input id="password" maxlength="16" placeholder="Password" type="password" style="width:128px;background:#ffdead;border-style:solid;border-width:2px;border-radius:6px;border-color:#ffffff" ;=""></span><br><br>
+        <input type="button" value="登录" onclick="javascript:login();" style="background:#ffdead;border-style:solid;border-width:2px;border-radius:6px;border-color:#ffffff;width:180px;height:36px" class="login_button">
+    </div>
+</center>
