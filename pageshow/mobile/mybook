@@ -1,0 +1,11 @@
+<img src=https://s3.bmp.ovh/imgs/2022/01/0a890246c086f1ea.png alt=GitNovel width=40%>
+<hr>
+<div id=username-box style='position:fixed;top:5%;font-size:2.5em;right:0px;border:2px solid #ffdead'>用户名<span id=username> {{$username}}
+</span><br><span id=_login_operation><a href=# onclick=javascript:logout();
+>退出登录</a></span></span>
+</div>
+<center><h1 style='font-size:5em'>我的书籍</h1></center>
+<button class=enter-button onclick=javascript:backPage(); style='font-size:2em'>返回上一页</button><br>
+<button class=enter-button onclick=javascript:localforage.removeItem("my-book-cache").then(function(){tellUser("缓存清理成功",MES_SUCCESS);location.reload();}).catch(function(err){tellUser(err,MES_ERROR);tellUser("缓存清理失败",MES_ERROR);}); style='font-size:2em'>清理缓存</button>
+<button class=enter-button onclick=javascript:location.href='/newbook'  style='font-size:2em'>新建书籍 </button>
+<div id=books style='font-size:3em'>数据正在加载......请稍后</div>
