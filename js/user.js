@@ -99,7 +99,7 @@ function register() {
             pwd_md5_obj.append(password + "@GitNovelSite.github.io@117.eb160de1de89d9058fcb0b968dbbbd68");
             var pwd_md5 = pwd_md5_obj.end();
 
-            var fp = fopen("GitNovelSite/GitNovelSite.github.io/file/private/pwdmd5/" + username, "w", getToken()); //ghStream.js fopen
+            var fp = fopen("GitNovelSite/GitNovelSite.github.io/file/private/user/pwdmd5/" + username, "w", getToken()); //ghStream.js fopen
             setdata(fp, pwd_md5);
             fclose(fp);
             tellUser("注册成功！", MES_SUCCESS);
