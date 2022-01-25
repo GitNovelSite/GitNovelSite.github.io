@@ -62,7 +62,7 @@ function PAGE_JS_MAIN() {
                     s += "<tr>";
                     for (var j = 0;
                         (i * 4 + j) < list.length && j < 4; j++) {
-                        s += "<td><a href=/view@" + list[i * 4 + j].uuid + " target=_blank><img src=//cdn.jsdelivr.net/gh/GitNovelSite/GitNovelSite.github.io/file/public/noveldata/images/" + list[i * 4 + j].uuid + ".jpg width=20% alt=" + list[i * 4 + j].bookname + "></a></td>";
+                        s += "<td><a href=/view@" + list[i * 4 + j].uuid + ",0 target=_blank><img src=//cdn.jsdelivr.net/gh/GitNovelSite/GitNovelSite.github.io/file/public/noveldata/images/" + list[i * 4 + j].uuid + ".jpg width=20% alt=" + list[i * 4 + j].bookname + "></a></td>";
                     };
                     s += "</tr><tr>";
                     for (var j = 0;
