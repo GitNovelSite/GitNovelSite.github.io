@@ -1,0 +1,14 @@
+<img src=https://s3.bmp.ovh/imgs/2022/01/0a890246c086f1ea.png alt=GitNovel height=30px>
+<hr>
+<div id=username-box style='position:fixed;top:0px;right:0px;border:2px solid #ffdead'>用户名<span id=username> {{$username}}
+</span><br><span id=_login_operation><a href=# onclick=javascript:logout();
+>退出登录</a></span></span>
+</div>
+<pre style='font-size:1.2em'>图书馆 <button class=enter-button onclick=javascript:location.href="/library">进入</button></pre> 最近阅读
+<br>
+<div id=latest_reading>正在加载数据</div>
+<br>
+<hr>
+<pre style='font-size:1.2em'>我的书籍 <button class=enter-button onclick=javascript:location.href="/mybook">进入</button></pre> 清单<br>
+<div id=latest_writing>正在加载数据</div>
+<hr>
