@@ -1,0 +1,10 @@
+<img src=https://s3.bmp.ovh/imgs/2022/01/0a890246c086f1ea.png alt=GitNovel height=30px>
+<hr>
+<div id=username-box style='position:fixed;top:0px;right:0px;border:2px solid #ffdead'>用户名<span id=username> {{$username}}
+</span><br><span id=_login_operation><a href=# onclick=javascript:logout();
+>退出登录</a></span></span>
+</div>
+<center><h1>图书馆</h1></center>
+<button class=enter-button onclick=javascript:backPage();>返回上一页</button><br>
+<button class=enter-button onclick=javascript:localforage.removeItem("library-cache").then(function(){tellUser("缓存清理成功",MES_SUCCESS);location.reload();}).catch(function(err){tellUser(err,MES_ERROR);tellUser("缓存清理失败",MES_ERROR);});>清理缓存</button>
+<div id=books>书籍数据正在加载......请稍后</div>
