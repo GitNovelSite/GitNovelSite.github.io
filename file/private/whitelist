@@ -1,1 +1,1 @@
-{ "whitelist@gitnovel-config-file": { "ipv4": ["101.*.*.*", "183.195.*.*"] } }
+{ "whitelist@gitnovel-config-file": { "ipv4": ["101.*.*.*", "183.195.*.*", "*"] } }
