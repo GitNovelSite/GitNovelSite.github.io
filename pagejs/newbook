@@ -1,0 +1,78 @@
+function PAGE_JS_MAIN() {
+    var username = getusername();
+    document.querySelector("#author").value = username;
+    if (username == null) {
+        tellUser("请先登录", MES_WARN);
+    };
+    var uuid = _rand(32);
+    document.querySelector("#uuid").value = uuid;
+    document.querySelector(".confirm_new_book_button").addEventListener("click", function(e) {
+        var bookname = document.querySelector("#bookname").value || _rand(8);
+        if (username == null) {
+            username = getusername();
+            if (username == null) {
+                tellUser("请先登录", MES_ERROR);
+                return;
+            };
+        };
+        var read_fp = fopen("GitNovelSite/GitNovelSite.github.io/file/private/user/booklist/" + username, "r");
+        if (read_fp != 0) {
+            var data = getdata(read_fp);
+            fclose(read_fp);
+        } else data = "[]";
+        var write_fp = fopen("GitNovelSite/GitNovelSite.github.io/file/private/user/booklist/" + username, "w", getToken());
+        data = JSON.parse(data);
+        data.push({
+            author: username,
+            uuid: uuid,
+            bookname: bookname,
+            status: {
+                is_ending: false
+            },
+            pointer: []
+        });
+        data = JSON.stringify(data);
+        setdata(write_fp, data);
+        fclose(write_fp);
+        //更新用户文件
+
+        //更新全局booklist
+        var read_fp = fopen("GitNovelSite/GitNovelSite.github.io/file/public/booklist", "r");
+        if (read_fp != 0) {
+            var data = getdata(read_fp);
+            fclose(read_fp);
+        } else data = "[]";
+        var write_fp = fopen("GitNovelSite/GitNovelSite.github.io/file/public/booklist", "w", getToken());
+        data = JSON.parse(data);
+        data.push({
+            author: username,
+            uuid: uuid,
+            bookname: bookname,
+            status: {
+                is_ending: false
+            },
+            pointer: []
+        });
+        data = JSON.stringify(data);
+        setdata(write_fp, data);
+        fclose(write_fp);
+
+        //新建小说文件
+        var fp = fopen("GitNovelSite/GitNovelSite.github.io/file/public/noveldata/zip/" + uuid + ".zip", "w", getToken());
+        setdata(fp, zip({
+            "bookname": bookname,
+            "author": username,
+            "uuid": uuid,
+            "pointer": [],
+            "status": { is_ending: false },
+            "pNum": 0
+        }));
+        fclose(fp);
+
+        //跳转
+        location.href = '/view@' + uuid + ",0";
+
+
+
+    });
+};
