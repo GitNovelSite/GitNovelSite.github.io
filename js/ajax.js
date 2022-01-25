@@ -1,6 +1,9 @@
 function ajax(url, cfg) {
     if (typeof(cfg) == "undefined" || typeof(cfg) != "object" || !(cfg instanceof Object) || !cfg)
         cfg = {};
+    if (typeof(cfg.async) == "undefined") {
+        cfg.async = true;
+    }
     return new Promise(function(resolve, reject) {
         if (typeof(url) == "undefined" || typeof(url) != "string") {
             return reject(new Error("Invalid URL"));
@@ -9,7 +12,7 @@ function ajax(url, cfg) {
             var xhr = new XMLHttpRequest();
         } else var xhr = new ActiveXObject("Microsoft.XMLHTTP");
 
-        xhr.open(cfg.method ? cfg.method : "GET", url, cfg.async ? "true" : "false");
+        xhr.open(cfg.method ? cfg.method : "GET", url, cfg.async ? true : false);
 
         if (cfg.responseType) {
             if (cfg.async) {
