@@ -79,6 +79,10 @@ const MES_SUCCESS = 1;
 const MES_WARN = 2;
 const MES_ERROR = 3;
 const MES_INFO = 4;
+const MSG_SUCCESS = 1;
+const MSG_WARN = 2;
+const MSG_ERROR = 3;
+const MSG_INFO = 4;
 
 function tellUser(msg, status) {
     if (typeof(status) == "undefined" || !status) {
