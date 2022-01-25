@@ -1,0 +1,141 @@
+function PAGE_JS_MAIN() {
+    var args = parseURLHash();
+    var uuid = args.arg.split(",")[0];
+    var pageid = args.arg.split(",")[1];
+    getNovelBasicInfo(uuid).then(function(basic_info) {
+        var novel_author = basic_info.author;
+        if (novel_author == getusername()) {
+            //作者
+            if (pageid == 0) {
+                //首页
+                document.querySelector("#render").innerHTML = `<button class=enter-button onclick=javascript:history.back(-1);>返回</button><button class=enter-button onclick=javascript:location.href='/view@${uuid},${pageid}'>预览此页</button><hr>书籍名称 <b>${basic_info.bookname}</b> 作者<b>${novel_author}</b><hr><br>书籍封面 <div id=book_cover>Loading......</div><br>书籍描述<br><textarea id=description cols=150 rows=10>Loading......</textarea><br><button class=enter-button id=confirm-edit-description>提交修改</button><br>书籍章数 <span id=book-ps>Loading......</span><br>完结状态 <span id=book-end-status></span><br>章节目录<br><div id=book-menu></div>`;
+
+                ajax(`//cdn.jsdelivr.net/gh/GitNovelSite/GitNovelSite.github.io/file/public/noveldata/images/${uuid}.jpg`, {
+                    responseType: "blob"
+                }).then(function(res) {
+                    console.log(res);
+                    var req_file = res[1];
+                    //var req_file = new blob([res], { type: "image/*" });
+                    document.querySelector("#book_cover").innerHTML = `<img src=${window.URL.createObjectURL(req_file)} height=20%>`;
+                }).catch(function(err) {
+                    console.error(err);
+                    if (err[0] == 404) {
+                        //未上传封面
+                        document.querySelector("#book_cover").innerHTML = "未上传封面<br><img height=20% alt=封面预览 id=book_cover_preview><br>请上传文件<input type=file id=book_cover_upload accept=image/* class=enter-button><br>接受 MIME=image/* 4M以下 不压缩图片 开启CDN图床（最近节点 日本东京）<br><button class=enter-button id=confirm-upload-book-cover>确认上传</button><br>注意：书籍封面只能上传一次 上传后不能修改";
+                        document.querySelector("#book_cover_upload").addEventListener("change", function(e) {
+                            console.log(e);
+                            var file = document.querySelector("#book_cover_upload").files[0];
+                            var url = window.URL.createObjectURL(file);
+                            document.querySelector("#book_cover_preview").src = url;
+                            window.uploadImageInvalid = false;
+                            document.querySelector("#book_cover_preview").onerror = function() {
+                                tellUser("上传图片不合法", MES_ERROR);
+                                window.uploadImageInvalid = true;
+                            };
+                            if (file.size > (4 * 1024 * 1024 /* 4MB */ )) {
+                                tellUser("上传图片过大", MES_ERROR);
+                            };
+                        });
+                        document.querySelector("#confirm-upload-book-cover").addEventListener("click", function() {
+                            var file = document.querySelector("#book_cover_upload").files[0];
+                            if (typeof(file) === "undefined") {
+                                return tellUser("请选择图片", MES_ERROR);
+                            };
+                            if (window.uploadImageInvalid) {
+                                return tellUser("上传图片不合法", MES_ERROR);
+                            };
+                            if (file.size > (4 * 1024 * 1024 /* 4MB */ )) {
+                                return tellUser("上传图片过大", MES_ERROR);
+                            };
+                            var reader = new FileReader();
+                            reader.readAsDataURL(file);
+                            reader.onload = function() {
+                                var base64 = reader.result.substring(reader.result.indexOf("base64,") + "base64,".length);
+                                if (window.XMLHttpRequest) {
+                                    var xhr = new XMLHttpRequest();
+                                } else {
+                                    var xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                                };
+                                xhr.open("PUT", `https://api.github.com/repos/GitNovelSite/GitNovelSite.github.io/contents/file/public/noveldata/images/${uuid}.jpg`);
+                                xhr.setRequestHeader("Authorization", "token " + getToken());
+                                xhr.send(JSON.stringify({ message: "Upload book cover | uuid " + uuid, content: base64 }));
+                                xhr.onload = function() {
+                                    if (xhr.status >= 200 && xhr.status < 400) {
+                                        //成功
+                                        tellUser("上传成功", MES_SUCCESS);
+                                        tellUser("服务器开启了缓存，请静待上传操作生效", MES_INFO);
+                                    } else {
+                                        //上传失败
+                                        console.error(xhr.response);
+                                        tellUser("图片上传失败<br>错误代码" + xhr.status + "<br>请联系lihugang@outlook.com", MES_ERROR);
+                                    }
+                                }
+                            };
+                        });
+                    } else {
+                        tellUser(`无法请求文件 paths/${uuid}.jpg<br>请联系lihugang@outlook.com`, MES_ERROR);
+                    }
+                });
+
+                if (typeof(basic_info.description) === "undefined") {
+                    basic_info.description = "";
+                };
+                document.querySelector("#description").value = basic_info.description;
+
+                document.querySelector("#confirm-edit-description").addEventListener("click", function() {
+                    //提交修改书籍描述
+                    basic_info.description = document.querySelector("#description").value || "";
+                    if (basic_info.description.length < 20) {
+                        return tellUser("书籍描述至少也要20个字吧，请有点诚意", MES_ERROR);
+                    };
+
+                    // ghStream.js 提交
+                    var fp = fopen("GitNovelSite/GitNovelSite.github.io/file/public/noveldata/zip/" + uuid + ".zip", "w", getToken());
+                    setdata(fp, zip(basic_info));
+                    fclose(fp);
+                    //提交完毕
+
+                    //清除缓存
+                    localforage.setItem(`novel-cache-${uuid}`, basic_info).then(function(res) {
+                        tellUser("提交成功", MES_SUCCESS);
+                    }).catch(function(err) {
+                        //不能刷新本地缓存是什么诡异操作？？？
+                        tellUser("无法刷新本地缓存，请尝试手动刷新", MES_ERROR);
+
+                    });
+                });
+
+                //显示章节
+                document.querySelector("#book-ps").innerHTML = basic_info.pNum || 0;
+
+                //显示是否完结
+                //basic_info.status = JSON.parse(basic_info.status);
+                document.querySelector("#book-end-status").innerHTML = basic_info.status.is_ending ? "已完结" : "未完结 <!--<button class=enter-button id=end-book class=enter-button>完结</button>-->"; //完结操作慢慢写，不着急
+                if (basic_info.status.is_ending) {
+                    //已完结
+                    document.querySelector("#description").setAttribute("readonly", "true");
+                    //锁定description
+                };
+
+                //渲染章节目录
+                var s = "";
+
+                for (var i = 0; i < basic_info.pNum; i += 10) {
+                    s += `<details><summary>第${i+1}~(i+11) > basic_info.pNum)?basic_info.pNum:(i+11)}章</summary>`;
+                    for (var j = 0; j < 10 && j < basic_info.pNum; j++) {
+                        s += `<a href=view@${uuid},${i * 10 + j + 1} target=_blank>`;
+                        s += `第${i * 10 + j + 1}章 `;
+                        s += basic_info[`p${i * 10 + j + 1}`].title;
+                        s += `</a>`;
+                    };
+                    s += `</details>`;
+                };
+
+                document.querySelector("#book-menu").innerHTML = s || "";
+                document.querySelector("#book-menu").innerHTML += "<br>没有更多了";
+            };
+        } else {
+            document.querySelector("#render").innerHTML = `您似乎没有编辑权限哦~<br><a href=# onclick=javascript:backPage();>返回</a> | <a href=/mybook>我的书籍</a> | <a href=/view@${uuid},${pageid}>欣赏此页</a> | <a href=# onclick=javascript:do_fork();>Fork 这部书籍</a><br>书籍名称 <b>${basic_info.bookname}</b> 作者 <b>${novel_author}</b>`;
+        };
+    });
+};
