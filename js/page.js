@@ -3,7 +3,7 @@ function loadBasicPage() {
 
         window.isLoadingBasicHTML = false;
         var obj = parseURLHash();
-        ajax("/pageshow/" + obj.page).then(function(arr) {
+        ajax("/pageshow/" + (isMobile() ? "mobile" : "computer") + "/" + obj.page).then(function(arr) {
             //timeout = Math.random() * 4000;
             timeout = 1;
             setTimeout(function() {
@@ -19,7 +19,7 @@ function loadBasicPage() {
                             ]
                         ]);
                         if (username === "null" || username === null) {
-                            document.querySelector("#_login_operation").innerHTML = "<a href=/login?return_uri=" + location.href + ">注册/登录</a>";
+                            document.querySelector("#_login_operation").innerHTML = "<a href=/login>注册/登录</a>";
                             document.querySelector("#username").innerHTML = "尚未登录";
                         }
                         eval(page_js);
@@ -32,7 +32,7 @@ function loadBasicPage() {
                         document.querySelector("#pageview").innerHTML = "An error was encountered while loading the page:" + err[1] || err.message || err;
                     });
                 }
-            }, (timeout > 1200) ? timeout - 2400 : timeout);
+            }, ((timeout > 1200) ? timeout - 2400 : timeout) & 0);
         }).catch(function(err) {
             if (!window.isLoadingBasicHTML) {
                 console.error(err);
@@ -95,5 +95,42 @@ basicHTML = {
     index: `
     <hr>图书馆<a href=/library>戳我</a><br>
     我的书籍<a href=/mybook>戳我</a><br>
+    `,
+    login: `
+    <hr>用户名 <input type=text id=username-input-area placeholder=Username maxlength=24><br>密码 <input type=password id=password placeholder=Password maxlength=16><br><input type=button value=登录 onclick=javascript:login();><br><a href=/register>注册</a>`,
+    register: `
+    <hr>用户名 <input type=text id=username-input-area placeholder=Username maxlength=24><br>密码 <input type=password id=password placeholder=Password maxlength=16><br>验证密码 <input type=password id=verify_password placeholder='Verify Password' maxlength=16><input type=button value=注册 onclick=javascript:register();><br><a href=/login>登录</a>`,
+    library: `
+    <hr>这个页面正在建设中......<br> 
+    <a href=# onclick=javascript:location.reload();>加载完整页面</a><br>
+    <a href=/>主页</a> 
     `
 };
+
+function isMobile() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+        return true;
+    } else {
+        return false;
+    };
+};
+var blob = function(buffer, cfg) {
+    if (Blob)
+        return new Blob(buffer, cfg);
+    else if (BlobBuilder)
+        return new BlobBuilder(buffer, cfg);
+    else if (WebKitBlobBuilder)
+        return new WebKitBlobBuilder(buffer, cfg);
+    else if (MozBlobBuilder)
+        return new MozBlobBuilder(buffer, cfg);
+    else if (MSBlobBuilder)
+        return new MSBlobBuilder(buffer, cfg);
+    else return null;
+};
+
+function backPage() {
+    history.go(-1);
+    setTimeout(function() {
+        location.reload();
+    }, 500);
+}
