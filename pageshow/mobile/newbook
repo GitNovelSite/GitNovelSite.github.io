@@ -5,7 +5,7 @@
 >退出登录</a></span></span>
 </div>
 <center>
-    <div id="reg-login-box" style="border-style:solid;border-width:3px;border-color:#e6e6fa;border-radius:8px;width:600px;height:800px"><span style="font-family:Cursive,Helvetica,sans-serif;white-space:pre-wrap;font-size:5em;color:#ffa500" ;="">新建书籍</span><br><br><span style="font-size:2em;color:#87cefa"><a onclick=javascript:backPage();>返回上一页</a></span><br><br>
+    <div id="reg-login-box" style="border-style:solid;border-width:3px;border-color:#e6e6fa;border-radius:8px;width:600px;height:800px"><span style="font-family:Cursive,Helvetica,sans-serif;white-space:pre-wrap;font-size:5em;color:#ffa500" ;="">新建书籍</span><br><br><span style="font-size:2em;color:#87cefa"><a onclick=javascript:location.href='/';>返回上一页</a></span><br><br>
         <span style="font-family:Cursive,Helvetica,sans-serif;white-space:pre-wrap;font-size:3em;color:#ffa500" ;="">书名<input id="bookname" maxlength="96" placeholder="Bookname" style="width:374px;background:#ffdead;border-style:solid;border-width:2px;border-radius:6px;border-color:#ffffff;font-size:1.5em" ;=""></span><br>
         <span style="font-family:Cursive,Helvetica,sans-serif;white-space:pre-wrap;font-size:3em;color:#ffa500" ;="">UUID<input id="uuid" maxlength="32" type="text" readonly style="width:374px;background:#ffdead;border-style:solid;border-width:2px;border-radius:6px;border-color:#ffffff;font-size:1.5em" ;=""></span><br>
         <span style="font-family:Cursive,Helvetica,sans-serif;white-space:pre-wrap;font-size:3em;color:#ffa500" ;="">作者<input id="author" maxlength="24" type="text" readonly style="width:374px;background:#ffdead;border-style:solid;border-width:2px;border-radius:6px;border-color:#ffffff;font-size:1.5em" ;=""></span><br><br>
