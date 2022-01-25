@@ -1,0 +1,57 @@
+function PAGE_JS_MAIN() {
+    var args = parseURLHash();
+    var uuid = args.arg.split(",")[0];
+    var pageid = args.arg.split(",")[1];
+    getNovelBasicInfo(uuid).then(function(basic_info) {
+        var novel_author = basic_info.author;
+        if (pageid == 0) {
+            //首页
+            document.querySelector("#render").innerHTML = `<button class=enter-button onclick=javascript:history.back(-1);>返回</button><button class=enter-button onclick=javascript:location.href='/edit@${uuid},${pageid}'>编辑此页</button><hr>书籍名称 <b>${basic_info.bookname}</b> 作者<b>${novel_author}</b><hr><br>书籍封面 <div id=book_cover>Loading......</div><br>书籍描述<br><textarea id=description cols=150 rows=10 readonly disabled>Loading......</textarea><br><br>书籍章数 <span id=book-ps>Loading......</span><br>完结状态 <span id=book-end-status></span><br>章节目录<br><div id=book-menu></div>`;
+
+            ajax(`//cdn.jsdelivr.net/gh/GitNovelSite/GitNovelSite.github.io/file/public/noveldata/images/${uuid}.jpg`, {
+                responseType: "blob"
+            }).then(function(res) {
+                console.log(res);
+                var req_file = res[1];
+                //var req_file = new blob([res], { type: "image/*" });
+                document.querySelector("#book_cover").innerHTML = `<img src=${window.URL.createObjectURL(req_file)} height=20%>`;
+            }).catch(function(err) {
+                console.error(err);
+                if (err[0] == 404) {
+                    //未上传封面
+                    document.querySelector("#book_cover").innerHTML = "作者未上传封面";
+                } else {
+                    tellUser("加载图片中发生错误 错误代码" + err[0] + "<br>请联系lihugang@outlook.com", MES_ERROR);
+                };
+            });
+            if (typeof(basic_info.description) === "undefined") {
+                basic_info.description = "";
+            };
+            document.querySelector("#description").value = basic_info.description || "";
+
+            //显示章节
+            document.querySelector("#book-ps").innerHTML = basic_info.pNum || 0;
+
+            //显示是否完结
+            //basic_info.status = JSON.parse(basic_info.status);
+            document.querySelector("#book-end-status").innerHTML = basic_info.status.is_ending ? "已完结" : "未完结 "; //完结操作慢慢写，不着急
+
+            //渲染章节目录
+            var s = "";
+
+            for (var i = 0; i < basic_info.pNum; i += 10) {
+                s += `<details><summary>第${i+1}~(i+11) > basic_info.pNum)?basic_info.pNum:(i+11)}章</summary>`;
+                for (var j = 0; j < 10 && j < basic_info.pNum; j++) {
+                    s += `<a href=view@${uuid},${i * 10 + j + 1} target=_blank>`;
+                    s += `第${i * 10 + j + 1}章 `;
+                    s += basic_info[`p${i * 10 + j + 1}`].title;
+                    s += `</a>`;
+                };
+                s += `</details>`;
+            };
+
+            document.querySelector("#book-menu").innerHTML = s || "";
+            document.querySelector("#book-menu").innerHTML += "<br>没有更多了";
+        };
+    });
+};
