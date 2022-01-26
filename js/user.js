@@ -43,6 +43,7 @@ function logout() {
         localStorage.removeItem(key);
     };
 
+    localforage.removeItem("my-book-cache");
     loadPage();
 };
 
