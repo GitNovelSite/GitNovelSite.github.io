@@ -5,7 +5,7 @@
 >退出登录</a></span></span>
 </div>
 <center><h1>我的书籍</h1></center>
-<button class=enter-button onclick=javascript:javascript:location.href='/';>返回上一页</button><br>
+<button class=enter-button onclick=javascript:location.href='/';>返回上一页</button><br>
 <button class=enter-button onclick=javascript:localforage.removeItem("my-book-cache").then(function(){tellUser("缓存清理成功",MES_SUCCESS);location.reload();}).catch(function(err){tellUser(err,MES_ERROR);tellUser("缓存清理失败",MES_ERROR);});>清理缓存</button>
 <button class=enter-button onclick=javascript:location.href='/newbook'>新建书籍 </button>
 <div id=books>数据正在加载......请稍后</div>
