@@ -129,7 +129,7 @@ function PAGE_JS_MAIN() {
                 //渲染章节目录
                 var s = "";
 
-                for (var i = 0; i < basic_info.pNum; i += 10) {
+                for (var i = 0; i < basic_info.pNum; i++) {
                     s += `<details><summary>第${i+1}~${((i+11) > basic_info.pNum)?basic_info.pNum:(i+11)}章</summary>`;
                     for (var j = 0; j < 10 && j < basic_info.pNum; j++) {
                         s += `<br><a href="view@${uuid},${i * 10 + j + 1}" target=_blank>`;
