@@ -131,7 +131,7 @@ function PAGE_JS_MAIN() {
 
                 for (var i = 0; i < basic_info.pNum; i++) {
                     s += `<details><summary>第${i+1}~${((i+11) > basic_info.pNum)?basic_info.pNum:(i+11)}章</summary>`;
-                    for (var j = 0; j < 10 && (i*10+j+1) < basic_info.pNum; j++) {
+                    for (var j = 0; j < 10 && (i*10+j) < basic_info.pNum; j++) {
                         s += `<br><a href="view@${uuid},${i * 10 + j + 1}" target=_blank>`;
                         s += `第${i * 10 + j + 1}章 `;
                         s += basic_info[`p${i * 10 + j + 1}`].title;
